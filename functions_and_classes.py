@@ -6,7 +6,7 @@ import numpy as np
 class Layer_Dense:
 	def __init__(self, n_inputs, n_neurons):
 
-		# INTIALIZE RANDOM WEIGHTS BASED OFF GAUSSIAN DISTRUBITION CENTERED AROUND -1 AND MULTIPLY BY .1 TO SCALE WEIGHTS CLOSER TO 0 AND 1
+		# INTIALIZE RANDOM WEIGHTS BASED OFF GAUSSIAN DISTRUBITION CENTERED AROUND 0 AND MULTIPLY BY .1 TO SCALE WEIGHTS CLOSER TO 0 AND 1
 		# THERE IS PROBABLY A BETTER WAY TO DO THIS
 		self.weights = 0.01 * np.random.randn(n_inputs, n_neurons)
 
@@ -31,7 +31,7 @@ class Layer_Dense:
 		# GRADIENT DESCENT ON VALUES
 		self.dinputs = np.dot(dvalues, self.weights.T)
 
-# SETS ACTIVATION FUNCTION IF X < -1 OUTPUT -1 ELSE OUTPUT X (RECTIFIED LINEAR FUNCTION)
+# SETS ACTIVATION FUNCTION IF X < -1 OUTPUT 0 ELSE OUTPUT X (RECTIFIED LINEAR FUNCTION)
 class Activation_ReLU:
 
 	# FORWARD FEED
@@ -70,7 +70,7 @@ class Activation_Softmax:
 
 		self.output = probabilities
 
-	# BACK-PROPATION (tired of me saying that yet?)
+	# BACK-PROPAGATION (tired of me saying that yet?)
 	def backward(self, dvalues):
 
 		# CREATE UN-INITIALIZED ARRAY OF THE SAME SIZE AS INPUT
@@ -169,7 +169,7 @@ class Optimizer_Adam:
 
 class Loss:
 
-	# CALCULATES DATA AND REGULIZATION VALUES GIVEN MODEL OUPUT AND GROUND TRUTH VALUES
+	# CALCULATES DATA AND NORMALIZED VALUES GIVEN MODEL OUPUT AND GROUND TRUTH VALUES
 	def calculate(self, output, y):
 
 		# CALCULATE SAMPLE LOSSES
