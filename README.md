@@ -9,6 +9,11 @@ GUI at one point???
 
 You should read through the code and see if you could explain any of the super mathy parts I commented that I didn't understand
 
-If you have questions I can explain almost everything (besides the stuff I specifically said I didn't understand) 
+If you have questions I can explain almost everything (besides the stuff I specifically said I didn't understand)
 
 The AI normally finishes around 90 % accuracy, I still need to mess with more iterations and see if that goes up. I've seen as high as 98% and as low as 75%
+
+## Nate's Corollary
+`pip install python-mnist`  
+Go to `bin` and run:  
+`./get_mnist_data.sh`
