@@ -1,5 +1,4 @@
 import numpy as np
-import nnfs
 from nnfs.datasets import spiral_data
 
 
@@ -95,8 +94,8 @@ class Activation_Softmax:
 			self.dinputs[index] = np.dot(jacobian_matrix, single_dvalues)
 
 
-# ADAM OPTIMIZER, BEST FOR THIS TYPE OF DIGIT RECOGNIZITION, TONS OF YOUTUBE VIDEOS EXPLAINING IT 
-# THIS IS Ctrl C'd I LITERALLY DONT KNOW WHAT THIS IS DOING MATHEMATICALLY
+# ADAM OPTIMIZER, best for the type of digit recognition that Im planning on doing, just google it if your curious  
+# FYI this is copied I dont really know how it works mathematically
 class Optimizer_Adam:
 
     #initialize
