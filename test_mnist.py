@@ -1,4 +1,5 @@
 from functions_and_classes import *
+from sklearn.utils import shuffle
 from mnist import MNIST
 
 print("Loading data...")
@@ -8,6 +9,9 @@ images = np.array(images)[:10000]
 labels = np.array(labels)[:10000]
 print("Images shape: " + str(images.shape))
 print("Labels shape: " + str(labels.shape))
+
+# PRINT A SAMPLE DIGIT
+print_sample(images[0], labels[0]);
 
 # CREATE HIDDEN LAYER WITH 2 INPUT VALUES (X Y POS OF EVERY SINGLE POINT IN ALL 3 SPIRALS)
 # NUMBER OF NEURONS IN EACH HIDDEN LAYER IS COMPLETELY ARBITRARY
@@ -28,6 +32,9 @@ optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
 
 # ITERATE OVER LOOP (EPOCH IS FANCY TERM FOR LOOPING OVER ENTIRE DATA SET FORWARD AND BACKWARDS ONCE)
 for epoch in range(10001):
+
+    # SHUFFLE IMAGES AND LABELS IN UNISON
+    images, labels = shuffle(images, labels)
 
     # LAYER 1 FOWARD PASS
     dense1.forward(images)

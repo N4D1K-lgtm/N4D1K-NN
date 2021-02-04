@@ -15,5 +15,6 @@ The AI normally finishes around 90 % accuracy, I still need to mess with more it
 
 ## Nate's Corollary
 `pip install python-mnist`  
+`pip install -U scikit-learn`  
 Go to `bin` and run:  
 `./get_mnist_data.sh`

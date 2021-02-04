@@ -262,3 +262,16 @@ class Activation_Softmax_Loss_CategoricalCrossentropy():
         self.dinputs[range(samples), y_true] -= 1
         # NORMALIZE GRADIENT
         self.dinputs = self.dinputs / samples
+
+def print_sample(image, label):
+    print("Sample image: should be " + str(label));
+    s = '';
+    for i in range (784):
+        if ((i % 28) == 0 and i != 0):
+            print(s)
+            s = ''
+        tmp = image[i]
+        if (tmp > 127):
+            s += "1 "
+        else:
+            s += "0 "
