@@ -4,31 +4,41 @@ from mnist import MNIST
 
 print("Loading data...")
 mndata = MNIST('./bin/data')
-allImages, allLabels = mndata.load_training()
-images = np.array(allImages)[:10000]
-labels = np.array(allLabels)[:10000]
-print("Images shape: " + str(images.shape))
-print("Labels shape: " + str(labels.shape))
+trainImages, trainLabels = mndata.load_training()
+testImages, testLabels = mndata.load_testing()
 
-images = images / 255
+trainImages = np.array(trainImages)[:60000]
+trainLabels = np.array(trainLabels)[:60000]
+
+testImages = np.array(testImages)[:10000]
+testLabels = np.array(testLabels)[:10000]
+
+print("trainImages shape: " + str(trainImages.shape))
+print("trainLabels shape: " + str(trainLabels.shape))
 
 # PRINT A SAMPLE DIGIT
-print_sample(images[0], labels[0]);
+print_sample(trainImages[0], trainLabels[0]);
+
+trainImages = trainImages / 255
+testImages = testImages / 255
+
 
 # CREATE SAMPLE DATA SET
 
 # CREATE HIDDEN LAYER WITH 2 INPUT VALUES (X Y POS OF EVERY SINGLE POINT IN ALL 3 SPIRALS)
 # NUMBER OF NEURONS IN EACH HIDDEN LAYER IS COMPLETELY ARBITRARY
-dense1 = Layer_Dense(784, 64, weight_regularizer_l2=5e-4,
-                            bias_regularizer_l2=5e-4)
+dense1 = Layer_Dense(784, 16, weight_regularizer_l2=5e-4, bias_regularizer_l2=5e-4)
 
 # RECTIFIED LINEAR ACTIVATION FOR LAYER 1
 activation1 = Activation_ReLU()
+activation2 = Activation_ReLU()
 
 # INITALIZE SECOND LAYER (WHICH WILL BE OUR OUTPUT LAYER) AND PASS THE INPUT FROM THE FIRST LAYER
 # 64 INPUT VALUES FOR 64 NEURONS IN PREVIOUS LAYER
 
-dense2 = Layer_Dense(64, 10)
+dense2 = Layer_Dense(16, 16)
+
+dense3 = Layer_Dense(16, 10)
 
 # INITALIZE SOFTMAX/LOSS OBJECT FOR LAYER 2
 loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
@@ -38,10 +48,10 @@ loss_activation = Activation_Softmax_Loss_CategoricalCrossentropy()
 optimizer = Optimizer_Adam(learning_rate=0.05, decay=5e-7)
 
 # ITERATE OVER LOOP (EPOCH IS FANCY TERM FOR LOOPING OVER ENTIRE DATA SET FORWARD AND BACKWARDS ONCE)
-for epoch in range(10001):
+for epoch in range(300):
 
     # LAYER 1 FOWARD PASS
-    dense1.forward(images)
+    dense1.forward(trainImages)
 
     # OUTPUT OF LAYER ONE FORWARD PASS TO RELU ACTIVATION FUNCTION
     activation1.forward(dense1.output)
@@ -49,22 +59,27 @@ for epoch in range(10001):
     # LAYER 2 FORWARD PASS
     dense2.forward(activation1.output)
 
+    activation2.forward(dense2.output)
+
+    dense3.forward(activation2.output)
+
     # LAYER 2 SOFTMAX ACTIVATION AND LOSS FUNCTION (WITH OUTPUT FROM PREVIOUS LAYER)
-    data_loss = loss_activation.forward(dense2.output, labels)
+    data_loss = loss_activation.forward(dense3.output, trainLabels)
 
     # CALCULATE REGULARIZATION PENALTY
     regularization_loss = \
         loss_activation.loss.regularization_loss(dense1) + \
-        loss_activation.loss.regularization_loss(dense2)
+        loss_activation.loss.regularization_loss(dense2) + \
+        loss_activation.loss.regularization_loss(dense3)
 
     # CALCULATE AND PRINT ACCURACY FROM OUTPUT VALUES COMPARED TO TARGET VALUES
     # AXIS = 1 BECAUSE (with literally everthing else in the NN) WE WANT THE CALCULATIONS FROM EACH ROW INSTEAD OF EACH COLUMN OF THE OUTPUT MATRIX
     loss = data_loss + regularization_loss
 
     predictions = np.argmax(loss_activation.output, axis=1)
-    if len(labels.shape) == 2:
-        y = np.argmax(labels, axis=1)
-    accuracy = np.mean(predictions==labels)
+    if len(trainLabels.shape) == 2:
+        y = np.argmax(trainLabels, axis=1)
+    accuracy = np.mean(predictions==trainLabels)
 
     if not epoch % 100:
         print(f'epoch: {epoch}, ' +
@@ -75,8 +90,10 @@ for epoch in range(10001):
               f'lr: {optimizer.current_learning_rate}')
 
     # PERFORM BACK-PROPOGATION
-    loss_activation.backward(loss_activation.output, labels)
-    dense2.backward(loss_activation.dinputs)
+    loss_activation.backward(loss_activation.output, trainLabels)
+    dense3.backward(loss_activation.dinputs)
+    activation2.backward(dense3.dinputs)
+    dense2.backward(activation2.dinputs)
     activation1.backward(dense2.dinputs)
     dense1.backward(activation1.dinputs)
 
@@ -84,6 +101,7 @@ for epoch in range(10001):
     optimizer.pre_update_params()
     optimizer.update_params(dense1)
     optimizer.update_params(dense2)
+    optimizer.update_params(dense3)
     optimizer.post_update_params()
 
 
@@ -91,8 +109,8 @@ for epoch in range(10001):
 # VALIDATE MODEL (ACTUALLY TESTING IT) (RUN THROUGH THIS AFTER ITS DONE TRAINING ^^^^)
 
 # TEST DATA
-X_test =  np.array(allImages)[10010 : 10020]
-y_test = np.array(allLabels)[10010 : 10020]
+X_test = testImages
+y_test = testLabels
 
 # PERFORM FORWARD PASS THROUGH THE LAYER
 dense1.forward(X_test)
@@ -103,8 +121,12 @@ activation1.forward(dense1.output)
 # FORWARD PASS THROUGH SECOND HIDDEN LAYER
 dense2.forward(activation1.output)
 
+activation2.forward(dense2.output)
+
+dense3.forward(activation2.output)
+
 # LOSS ACTIVATION FUNCTION
-loss = loss_activation.forward(dense2.output, y_test)
+loss = loss_activation.forward(dense3.output, y_test)
 
 #CALCULATE ACCURACY
 predictions = np.argmax(loss_activation.output, axis=1)

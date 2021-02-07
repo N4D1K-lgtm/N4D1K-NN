@@ -353,8 +353,3 @@ def print_sample(image, label):
         else:
             s += "0 "
 
-
-def random_test_sample(X, y, Max):
-	randInt = np.random.randint(0, Max)
-	self.X = np.array(X)[randInt]
-	self.y = np.array(y)[randInt]
