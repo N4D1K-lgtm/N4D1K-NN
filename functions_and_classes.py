@@ -4,7 +4,9 @@ import numpy as np
 
 # CLASS FOR HIDDEN LAYERS TAKES NUMBER OF INPUTS AND NUMBER OF NEURONS
 class Layer_Dense:
-	def __init__(self, n_inputs, n_neurons):
+	def __init__(self, n_inputs, n_neurons,
+                 weight_regularizer_l1=0, weight_regularizer_l2=0,
+                 bias_regularizer_l1=0, bias_regularizer_l2=0):
 
 		# INTIALIZE RANDOM WEIGHTS BASED OFF GAUSSIAN DISTRUBITION CENTERED AROUND 0 AND MULTIPLY BY .1 TO SCALE WEIGHTS CLOSER TO 0 AND 1
 		# THERE IS PROBABLY A BETTER WAY TO DO THIS
@@ -13,6 +15,12 @@ class Layer_Dense:
 		# INITIALIZE BIASES (IN THIS CASE 1D ARRAY FILLED WITH ZEROS FOR THE AMOUNT OF NUERONS IN THE LAYER)
 		self.biases = np.zeros((1, n_neurons))
 
+		# REGULARIZATON STRENGTH
+		self.weight_regularizer_l1 = weight_regularizer_l1
+		self.weight_regularizer_l2 = weight_regularizer_l2
+		self.bias_regularizer_l1 = bias_regularizer_l1
+		self.bias_regularizer_l2 = bias_regularizer_l2
+	
 	# FORWARD FEED
 	def forward(self, inputs):
 
@@ -24,11 +32,36 @@ class Layer_Dense:
 	# BACK-PROPOGATION
 	# I understand sort of what this is doing but the underlying math is way over my head, (multivariable calculus and linear algebra)
 	def backward(self, dvalues):
-		# GRADIENT DESCENT ON PARAMETERS
+		
+		# GRADIENT DESCENT ON PARAMATERS
 		self.dweights = np.dot(self.inputs.T, dvalues)
 		self.dbiases = np.sum(dvalues, axis=0, keepdims=True)
-		self.dinputs = np.dot(dvalues, self.weights.T)
-		# GRADIENT DESCENT ON VALUES
+
+		# GRADIENTS DESCENT ON REGULARIZATION
+		
+		#L1 ON WEIGHTS
+		if self.weight_regularizer_l1 > 0:
+			dL1 = np.ones_like(self.weights)
+			dL1[self.weights < 0] = -1
+			self.dweights += self.weight_regularizer_l1 * dL1
+		
+		# L2 ON WEIGHTS
+		if self.weight_regularizer_l2 > 0:
+			self.dweights += 2 * self.weight_regularizer_l2 * \
+			self.weights
+		
+		# L1 ON BIASES
+		if self.bias_regularizer_l1 > 0:
+			dL1 = np.ones_like(self.biases)
+			dL1[self.biases < 0] = -1
+			self.dbiases += self.bias_regularizer_l1 * dL1
+		
+		# L2 ON BIASES
+		if self.bias_regularizer_l2 > 0:
+			self.dbiases += 2 * self.bias_regularizer_l2 * \
+			self.biases
+
+		# Gradient on values
 		self.dinputs = np.dot(dvalues, self.weights.T)
 
 # SETS ACTIVATION FUNCTION IF X < -1 OUTPUT 0 ELSE OUTPUT X (RECTIFIED LINEAR FUNCTION)
@@ -63,9 +96,13 @@ class Activation_Softmax:
 	# FORWARD FEED
 	def forward(self, inputs):
 
+		#DONT CHOP OFF LEFT ARM
 		self.inputs = inputs
 
+		#GET UNORMALIZED PROBABILITIES
 		exp_values = np.exp(inputs - np.max(inputs, axis=1, keepdims = True))
+		
+		#NORMALIZE PROBABILITIEES
 		probabilities = exp_values / np.sum(exp_values, axis=1, keepdims = True)
 
 		self.output = probabilities
@@ -79,14 +116,17 @@ class Activation_Softmax:
 		# ITERATE OUTPUTS AND GRADIENTS
 		for index, (single_output, single_dvalues) in \
 			enumerate(zip(self.output, dvalues)):
+			
 			# FLATTEN OUTPUT ARRAY
 			single_output = single_output.reshape(-1, 1)
+			
 			'''
 			CALCULATES JACOBIAN MATRIX FROM FLATTENED ARRAY
 			(this is the math thats over my head)
 			I know (if i understand it correctly) its somehow doing matrix math to find the most desirable direction of weights and biases
 			while taking into account every single neurons magnitude and direction
 			'''
+			
 			jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
 
 			# GET FINAL GRADIENT AND ADD IT TO THE ARRAY OF SAMPLE GRADIENTS
@@ -169,7 +209,44 @@ class Optimizer_Adam:
 
 class Loss:
 
+
+	# CALCULATE REGULARIZATION LOSS 
+	def regularization_loss(self, layer):
+
+		# DEFAULT
+		regularization_loss = 0
+
+		# L1 REGULIZATION ON WEIGTHS
+		# CALCULATE WHEN FACTOR IS MORE THAN 0
+		if layer.weight_regularizer_l1 > 0:
+			regularization_loss += layer.weight_regularizer_l1 * \
+			np.sum(np.abs(layer.weights))
+
+		# L2 REGULARIZATION ON WEIGHTS
+		if layer.weight_regularizer_l2 > 0:
+			regularization_loss += layer.weight_regularizer_l2 * \
+			np.sum(layer.weights *
+			      layer.weights)
+
+
+		# L1 REGULARIZATION ON BIASES
+		# CALCULATE WHEN FACTOR IS GREATER THAN 0
+		if layer.bias_regularizer_l1 > 0:
+			regularization_loss += layer.bias_regularizer_l1 * \
+			np.sum(np.abs(layer.biases))
+
+		# L2 REGULARIZATION BIASES
+		if layer.bias_regularizer_l2 > 0:
+			regularization_loss += layer.bias_regularizer_l2 * \
+			np.sum(layer.biases *
+			      layer.biases)
+
+		return regularization_loss
+
+
+
 	# CALCULATES DATA AND NORMALIZED VALUES GIVEN MODEL OUPUT AND GROUND TRUTH VALUES
+	
 	def calculate(self, output, y):
 
 		# CALCULATE SAMPLE LOSSES
@@ -275,3 +352,9 @@ def print_sample(image, label):
             s += "1 "
         else:
             s += "0 "
+
+
+def random_test_sample(X, y, Max):
+	randInt = np.random.randint(0, Max)
+	self.X = np.array(X)[randInt]
+	self.y = np.array(y)[randInt]
