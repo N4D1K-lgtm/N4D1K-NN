@@ -12,7 +12,7 @@ This can take several minutes to train and run (especially if you try experiment
 This version hit a max of about 91% with an adam optimizer, no dropout, regularization and 300 iterations (or epochs). 
 I never implented batches so it trains on all 60000 images every epoch. 
 
-### Dependencies for Numpy Version
+### Dependencies for Numpy Version:
 `pip install python-MNIST`  
 `pip install -U scikit-learn`   
 `pip install numpy`  
@@ -28,6 +28,6 @@ A 30% dropout rate increases the total accuracy on the training set by about 2%.
 
 GUI might happen if I don't get distracted with other cool stuff. (no promises)
 
-### Dependencies for Keras Version
+### Dependencies for Keras Version:
 `pip install keras`
 
