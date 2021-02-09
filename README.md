@@ -1,4 +1,4 @@
-# Basic Nueral Network for MNIST Dataset Written in Python
+# Basic Neural Network for MNIST Dataset Written in Python
 
 The entire purpose of this is to show my friends that wont care
 
