@@ -8,7 +8,7 @@ If you have questions I can explain almost everything (or can try to), besides t
 If you're dave, dont judge my code. If you're not dave... think whatever you like. Feel free to contribute to add to a branch or message me directly.
 (nate wrote stuff for importing MNIST images)
 
-This can take several minutes to train and run (especially if you try experimenting with lots of layers/nuerons/epochs)
+This can take several minutes to train and run (especially if you try experimenting with lots of layers/neurons/epochs)
 This version hit a max of about 91% with an adam optimizer, no dropout, regularization and 300 iterations (or epochs). 
 I never implented batches so it trains on all 60000 images every epoch. 
 
