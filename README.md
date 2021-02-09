@@ -16,7 +16,7 @@ I never implented batches so it trains on all 60000 images every epoch.
 `pip install python-MNIST`  
 `pip install -U scikit-learn`   
 `pip install numpy`  
-Go to `bin` and run:  
+Go to `/Numpy/bin` and run:  
 `./get_mnist_data.sh`
 
 ## KERAS CNN
