@@ -1,6 +1,6 @@
 # Basic Neural Network for MNIST Dataset Written in Python
 
-The entire purpose of this is to show my friends that wont care
+The entire purpose of this is to show my friends that wont care (and also write a paper)
 
 ## Numpy CNN
 I handwrote everything but the adam optimizer but almost none of it is my code, followed lots of youtube videos explaining everything and giving examples.
