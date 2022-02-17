@@ -26,7 +26,7 @@ Due to the magic of CUDA parallelization, runtime is significantly faster than t
 This CNN consistently hits 98% on the training set. (10000 images) It does this in just 20 epochs through randomly shuffled batches of 128 images. 
 A 30% dropout rate increases the total accuracy on the training set by about 2%. 
 
-some sort of graphica interface might happen if I don't get distracted with other cool stuff. (no promises)
+some sort of graphical interface might happen if I don't get distracted with other cool stuff. (no promises)
 
 ### Dependencies for Keras Version:
 `pip install keras`
