@@ -1,6 +1,6 @@
 # Basic Neural Network for MNIST Dataset Written in Python
 
-The entire purpose of this is to show my friends that wont care (and also write a paper)
+There are two implementations of a CNN in this repository, one in numpy/pandas and another in 
 
 ## Numpy CNN
 I handwrote everything but the adam optimizer but almost none of it is my code, followed lots of youtube videos explaining everything and giving examples.
@@ -22,11 +22,11 @@ Go to `/Numpy/bin` and run:
 ## KERAS CNN
 This is almost entirely from a book with some negligable QOL changes and different variable names (I also changed the optimizer). Writing the network from scratch helped me understand exactly what was going on. KERAS is a machine learning python library built on top of tensorflow/theano. Should check it out if you find this stuff interesting. (https://keras.io/)
 
-Due to the magic of CUDA parallelization/actually well writting python libraries, compile time is significantly faster. (like 14 seconds on a GTX 1070/I5 4690k)
+Due to the magic of CUDA parallelization, runtime is significantly faster than the Numpy implementation. (like 14 seconds on a GTX 1070/I5 4690k)
 This CNN consistently hits 98% on the training set. (10000 images) It does this in just 20 epochs through randomly shuffled batches of 128 images. 
 A 30% dropout rate increases the total accuracy on the training set by about 2%. 
 
-GUI might happen if I don't get distracted with other cool stuff. (no promises)
+some sort of graphica interface might happen if I don't get distracted with other cool stuff. (no promises)
 
 ### Dependencies for Keras Version:
 `pip install keras`
