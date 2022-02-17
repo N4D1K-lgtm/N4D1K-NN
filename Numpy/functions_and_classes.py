@@ -64,7 +64,7 @@ class Layer_Dense:
 		# Gradient on values
 		self.dinputs = np.dot(dvalues, self.weights.T)
 
-# SETS ACTIVATION FUNCTION IF X < -1 OUTPUT 0 ELSE OUTPUT X (RECTIFIED LINEAR FUNCTION)
+# SETS ACTIVATION FUNCTION IF X < 0 OUTPUT 0 ELSE OUTPUT X (RECTIFIED LINEAR FUNCTION)
 class Activation_ReLU:
 
 	# FORWARD FEED
@@ -85,8 +85,8 @@ class Activation_ReLU:
 
 '''
 SOFTMAX IS CALLED ON THE FINAL OUTPUT LAYER OF THE NEURAL NETWORK
-THE INPUT MATRIX IS SUBTRACTED BY THE HIGHEST VALUE IN THE MATRIX TO BRING EVERTHING BELOW -1
-THE INPUT MATRIX IS THEN EXPONENTIATED BY ROW (AXIS 1)
+THE INPUT MATRIX IS SUBTRACTED BY THE HIGHEST VALUE IN THE MATRIX TO BRING EVERTHING BELOW 0
+THE INPUT MATRIX IS THEN EXPONENTIATED BY ROW (AXIS = 1)
 EXPONENTIATED INPUT MATRIX IS DIVIDED BY THE SUM OF EVERY VALUE IN THE MATRIX
 EVERY BATCH (ROW IN INPUT MATRIX) ADDS TO 1 BECAUSE OF NORMALIZATION FUNCTION
 '''
@@ -123,7 +123,7 @@ class Activation_Softmax:
 			'''
 			CALCULATES JACOBIAN MATRIX FROM FLATTENED ARRAY
 			(this is the math thats over my head)
-			I know (if i understand it correctly) its somehow doing matrix math to find the most desirable direction of weights and biases
+			I know (if i understand it correctly) its somehow doing math to find the most desirable direction of weights and biases
 			while taking into account every single neurons magnitude and direction
 			'''
 			
