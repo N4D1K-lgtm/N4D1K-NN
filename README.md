@@ -1,6 +1,6 @@
 # Basic Neural Network for MNIST Dataset Written in Python
 
-There are two implementations of a CNN in this repository, one in numpy/pandas and another in 
+There are two implementations of a CNN in this repository, one in numpy/pandas and another in Tensorflow.Keras
 
 ## Numpy CNN
 I handwrote everything but the adam optimizer but almost none of it is my code, followed lots of youtube videos explaining everything and giving examples.
